@@ -4,7 +4,6 @@ import PyPDF2
 import gemini
 
 app = Flask(__name__)
-app.config.from_pyfile('config.py')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
 
@@ -22,7 +21,7 @@ def generate_job_description():
         ctc = data.get('ctc')
 
         if job_title and location and overall_experience and mandatory_skills and work_type and mode_of_work and education_requirement and ctc:
-            jd_text = gemini.generate_job_description(job_title, location, mandatory_skills, overall_experience, work_type, mode_of_work, education_requirement, ctc, app.config['GEMINI_API_KEY'])
+            jd_text = gemini.generate_job_description(job_title, location, mandatory_skills, overall_experience, work_type, mode_of_work, education_requirement, ctc)
             return jsonify({'job_description': jd_text}), 200
         else:
             return jsonify({'error': 'Missing required fields.'}), 400
