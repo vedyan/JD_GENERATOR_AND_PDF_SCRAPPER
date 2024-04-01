@@ -1,6 +1,8 @@
 import google.generativeai as genai
-from config import GEMINI_API_KEY
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 def post_process_text(text):
     cleaned_text = text.replace("**", "")
@@ -9,7 +11,7 @@ def post_process_text(text):
 
 def generate_job_description(job_title, location, mandatory_skills, overall_experience, work_type, mode_of_work
                              , education_requirement, ctc):
-    genai.configure(api_key=GEMINI_API_KEY)
+    genai.configure(api_key= os.getenv("GEMINI_API_KEY"))
     model = genai.GenerativeModel('gemini-pro')
     jd = (f"Job Description for {job_title} at {location} if any\n Skills: {', '.join(mandatory_skills)}\n"
           f"Experience: {overall_experience} years\n"
