@@ -37,8 +37,8 @@ def generate_job_description_from_pdf():
         pdf_text = ''
         for page_num in range(len(pdf_reader.pages)):
             pdf_text += pdf_reader.pages[page_num].extract_text()
-
-        return jsonify({'job_description': pdf_text}), 200
+        reformated_text = gemini.reformat_job_description(pdf_text)
+        return jsonify({'job_description': reformated_text}), 200
     return jsonify({'error': 'PDF file not provided.'}), 400
 
 
