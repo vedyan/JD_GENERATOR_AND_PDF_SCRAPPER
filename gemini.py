@@ -36,3 +36,26 @@ def generate_job_description(job_title, location, mandatory_skills, overall_expe
           )
     response = model.generate_content(jd)
     return post_process_text(response.text)
+
+
+def reformat_job_description(extracted_text):
+    genai.configure(api_key= os.getenv("GEMINI_API_KEY"))
+    model = genai.GenerativeModel('gemini-pro')
+    prompt = (f'''Rewrite the JD in the format\n
+    Job title :\n
+    Summary :\n
+    Responsibilities/Duties :\n
+    Preferred Qualifications :\n
+    Mandatory Skills :\n
+    Education Requirements :\n
+    Experience :\n
+    CTC Range :\n
+    Equal Opportunity Employer:\nWe are proud to be an Equal Opportunity Employer with a global culture that
+    embraces diversity. We are committed to providing an environment free of unfair discrimination and
+    harassment. We do not discriminate based on age, race, colour, sex, religion, national origin,
+    disability, pregnancy, marital status, sexual orientation, gender reassignment, veteran status,
+    or other protected category.\n\n the end of the job description should always include the above Equal
+    Opportunity Employer paragraph if any of the above subheadings are not present in the JD then leave a empty space\n\n 
+    Here is the JD text {extracted_text}.''')
+    response = model.generate_content(prompt)
+    return post_process_text(response.text)

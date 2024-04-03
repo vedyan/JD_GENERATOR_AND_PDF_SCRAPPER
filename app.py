@@ -33,20 +33,12 @@ def generate_job_description():
 def generate_job_description_from_pdf():
     if 'pdf_file' in request.files:
         pdf_file = request.files['pdf_file']
-        if pdf_file.filename != '':
-            pdf_filename = pdf_file.filename
-            pdf_file_path = os.path.join(app.config['UPLOAD_FOLDER'], pdf_filename)
-            pdf_file.save(pdf_file_path)
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
+        pdf_text = ''
+        for page_num in range(len(pdf_reader.pages)):
+            pdf_text += pdf_reader.pages[page_num].extract_text()
 
-            with open(pdf_file_path, 'rb') as f:
-                pdf_reader = PyPDF2.PdfReader(f)
-                pdf_text = ''
-                for page_num in range(len(pdf_reader.pages)):
-                    pdf_text += pdf_reader.pages[page_num].extract_text()
-
-            os.remove(pdf_file_path)
-
-            return jsonify({'job_description': pdf_text}), 200
+        return jsonify({'job_description': pdf_text}), 200
     return jsonify({'error': 'PDF file not provided.'}), 400
 
 
