@@ -1,10 +1,10 @@
 from flask import Flask, request, jsonify
-import os
+import requests
+import fitz  # PyMuPDF
 import PyPDF2
 import gemini
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
 
 
 @app.route('/job_description', methods=['POST'])
@@ -41,6 +41,27 @@ def generate_job_description_from_pdf():
         return jsonify({'job_description': reformated_text}), 200
     return jsonify({'error': 'PDF file not provided.'}), 400
 
+
+@app.route('/pdf_job_description_s3', methods=['POST'])
+def generate_job_description_from_url():
+    pdf_url = request.json.get("pdf_url")
+
+    try:
+        response = requests.get(pdf_url)
+        response.raise_for_status()
+        pdf_data = response.content
+
+        pdf_document = fitz.open(stream=pdf_data, filetype="pdf")
+
+        text = ""
+        for page_num in range(pdf_document.page_count):
+            page = pdf_document[page_num]
+            text += page.get_text()
+        reformated_text = gemini.reformat_job_description(text)
+        return jsonify({'job_description': reformated_text}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
