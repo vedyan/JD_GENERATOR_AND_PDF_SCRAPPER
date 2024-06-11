@@ -3,9 +3,10 @@ import requests
 import fitz  # PyMuPDF
 import PyPDF2
 import gemini
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app, resources={r"/*": {"origins": "https://app.rework.club"}})
 
 @app.route('/job_description', methods=['POST'])
 def generate_job_description():
