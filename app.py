@@ -8,10 +8,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "https://app.rework.club/"}})
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 
 @app.route('/job_description', methods=['POST'])
 def generate_job_description():
