@@ -3,8 +3,10 @@ import requests
 import fitz  # PyMuPDF
 import PyPDF2
 import gemini
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "https://app.rework.club/"}})
 
 @app.route('/')
 def index():
