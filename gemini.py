@@ -9,11 +9,12 @@ def post_process_text(text):
     return cleaned_text
 
 
-def generate_job_description(job_title, location, mandatory_skills, overall_experience, work_type, mode_of_work
+def generate_job_description(job_title, location, mandatory_skills, relative_experience, overall_experience, work_type, mode_of_work
                              , education_requirement, ctc):
     genai.configure(api_key= os.getenv("GEMINI_API_KEY"))
     model = genai.GenerativeModel('gemini-pro')
     jd = (f"Job Description for {job_title} at {location} if any\n Skills: {', '.join(mandatory_skills)}\n"
+          f"Relative Experience: {relative_experience} years\n"
           f"Experience: {overall_experience} years\n"
           f"Work Type: {work_type}\n Mode of Work: {mode_of_work}"
           f"The JD should be in the following format : \n"
@@ -21,7 +22,7 @@ def generate_job_description(job_title, location, mandatory_skills, overall_expe
           f"Summary : it should include the brief about the {job_title} the location of work {location} if and the "
           f"type of work {work_type} and the mode of work {mode_of_work}\n"
           f"Responsibilities/Duties: \n"
-          f"{education_requirement} and {overall_experience} and {mandatory_skills} and any other additional skills "
+          f"{education_requirement} and {relative_experience} and {mandatory_skills} and any other additional skills "
           f"under Qualifications and skills: \n"
           f"Mandatory Skills: {mandatory_skills}\n"
           f"Education Requirements: {education_requirement}\n"
