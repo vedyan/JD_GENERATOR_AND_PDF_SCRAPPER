@@ -1,12 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import requests
 import fitz  # PyMuPDF
 import PyPDF2
 import gemini
-from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://app.rework.club"}})
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 @app.route('/job_description', methods=['POST'])
 def generate_job_description():
@@ -15,9 +18,7 @@ def generate_job_description():
         job_title = data.get('job_title')
         location = data.get('location')
         mandatory_skills = data.get('mandatory_skills', [])
-        
-        # experience = data.get('experience')
-        
+        relative_experience = data.get('relative_experience')
         overall_experience = data.get('overall_experience')
         work_type = data.get('work_type')
         mode_of_work = data.get('mode_of_work')
@@ -25,7 +26,7 @@ def generate_job_description():
         ctc = data.get('ctc')
 
         if job_title and location and overall_experience and mandatory_skills and work_type and mode_of_work and education_requirement and ctc:
-            jd_text = gemini.generate_job_description(job_title, location, mandatory_skills, overall_experience, work_type, mode_of_work, education_requirement, ctc)
+            jd_text = gemini.generate_job_description(job_title, location, mandatory_skills, relative_experience, overall_experience, work_type, mode_of_work, education_requirement, ctc)
             return jsonify({'job_description': jd_text}), 200
         else:
             return jsonify({'error': 'Missing required fields.'}), 400
