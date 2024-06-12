@@ -15,6 +15,9 @@ def generate_job_description():
         job_title = data.get('job_title')
         location = data.get('location')
         mandatory_skills = data.get('mandatory_skills', [])
+        
+        experience = data.get('experience')
+        
         overall_experience = data.get('overall_experience')
         work_type = data.get('work_type')
         mode_of_work = data.get('mode_of_work')
